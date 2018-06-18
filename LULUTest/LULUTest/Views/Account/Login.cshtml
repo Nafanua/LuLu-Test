@@ -1,0 +1,38 @@
+﻿@using LULUTest.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<div class="modal-dialog">
+    <div class="loginmodal-container">
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email", type = "text" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", type = "password" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe)
+
+            <input type="submit" name="login" class="btn btn-primary btn-lg" value="Вход" />
+
+            //Enable this once you have account confirmation enabled for password reset functionality
+            @*<p>
+                @Html.ActionLink("Forgot your password?", "ForgotPassword")
+            </p>*@
+        }
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

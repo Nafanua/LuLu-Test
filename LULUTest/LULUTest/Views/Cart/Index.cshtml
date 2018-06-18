@@ -1,0 +1,66 @@
+﻿@model LULUTest.Models.Cart
+
+@{
+    ViewBag.Title = "Ваша корзина";
+}
+
+<div class="whiteBackground">
+    <h2 class="text-center">@ViewBag.Title</h2>
+    <table class="table table-bordered" id="CartTable">
+        <thead>
+            <tr>
+                <th class="text-center">Количество</th>
+                <th class="text-center">На складе</th>
+                <th style="max-width:517px;">Наименование</th>
+                <th class="text-right">Цена</th>
+                <th class="text-right">Итого</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Line in Model.Cart.Lines)
+            {
+                <tr>
+                    <td class="text-center">@Line.Quantity</td>
+                    <td class="text-center">@Line.Book.Quantity</td>
+                    <td class="text-left">@Line.Book.Name - @Line.Book.Author</td>
+                    <td class="text-right">@Line.Book.Price.ToString() &#8381;</td>
+                    <td class="text-right">@((Line.Quantity * @Line.Book.Price).ToString())&#8381;</td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("RemoveBookFromCart", "Cart", FormMethod.Post, new { style = "display:inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("BookId", Line.Book.Id)
+                            <input class="btn btn-danger btn-xs" type="submit" value="Удалить" />
+                        }
+                        @using (Html.BeginForm("RemoveLineFromCart", "Cart", FormMethod.Post, new { style = "display:inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("BookId", Line.Book.Id)
+                            <input class="btn btn-danger btn-xs" type="submit" value="Удалить все" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right">Итого:</td>
+                <td colspan="3" class="text-right">@Model.Cart.ComputeTotalValue().ToString()&#8381;</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="text-center">
+        <a class="btn btn-primary" href="/Book/Index">Продолжить покупки</a>
+        @if (Model.Cart.Lines.Count() > 0)
+    {
+
+    }
+        <button id="checkoutButton" class="btn btn-primary" onclick="location.href='@Url.Action("Checkout", "Cart")'">Оформить заказ</button>
+    </div>
+</div>
+
+<script>window.onload = function () {
+    buttonDisabled(@Model.Cart.Lines.Count())
+        }
+</script>

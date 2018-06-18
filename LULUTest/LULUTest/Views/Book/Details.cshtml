@@ -1,0 +1,26 @@
+﻿@model LULUTest.Models.BookViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="whiteBackground row details">
+    <div class="col-md-3">
+        <img width="250" height="350" src="~/Content/Images/noimage.png" alt="img" />
+    </div>
+    <div class="col-md-9" style="font-size:16px">
+        <label>Название: </label>@Model.Name<br />
+        <label>Автор: </label>@Model.Author<br />
+        <label>Дата выхода: </label>@Model.PubDate.ToString("MM:yyyy")<br />
+        <label>Цена: </label>@Model.Price &#8381;
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="text-center">Описание</h3>
+        @Model.Description
+    </div>
+
+
+</div>
+

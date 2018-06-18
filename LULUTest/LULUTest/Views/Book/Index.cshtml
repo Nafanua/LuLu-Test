@@ -1,0 +1,73 @@
+﻿@using LULUTest.Models
+@model PagedList.IPagedList<BookViewModel>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="content row" style="margin-left:10px; margin-right:10px;">
+    @foreach (var book in Model)
+    {
+        <div class="col-sm-4 col-md-3 col-xs-7">
+            <div class="product">
+                <div class="product-img">
+                    <a href="/Book/Details/@book.Id"><img src="~/Content/Images/noimage.png" alt=""></a>
+                </div>
+                <p class="product-title">
+                    <a href="/Book/Details/@book.Id">
+                        @if (book.Name.Length >= 25)
+                        {
+                            @book.Name.Substring(0, 20);
+                            @Html.Label("", "...");
+                        }
+                        else
+                        {
+                            @book.Name;
+                        }              
+                    </a>
+                </p>
+                <p class="product-desc">Автор: @book.Author.Split(',')[0]</p>
+                <p>Доступно: @book.Quantity</p>
+                <p class="product-price">Цена: &#8381;@book.Price</p>
+                @if (Request.IsAuthenticated && User.IsInRole("seller"))
+                {
+                    <p>
+                        @using (Html.BeginForm("Delete", "Book", FormMethod.Post, new { @style = "display:inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Id" value="@book.Id" />
+                            <button class="btn btn-xs btn-black" type="submit">Удалить</button>
+                        }
+
+                        <button class="btn btn-xs btn-black" onclick="location.href='/Book/EditBook/@book.Id'">Редактировать</button>
+                    </p>
+                }
+                else if (Request.IsAuthenticated && User.IsInRole("user"))
+                {
+                    <p>
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @style = "display:inline" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="bookId" value="@book.Id" />
+                            <button class="btn btn-xs btn-success" type="submit">Добавить в карзину</button>
+                        }
+                    </p>
+                }
+
+            </div>
+        </div>
+    }
+</div>
+<br />
+@if (Model.PageCount > 1)
+{
+    <div class="text-center" style="display:block">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, filter = Request.QueryString["filter"] }))
+    </div>
+
+}
+
+
+

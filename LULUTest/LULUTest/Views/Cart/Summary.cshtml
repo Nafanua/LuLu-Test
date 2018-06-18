@@ -1,0 +1,6 @@
+﻿@model LULUTest.Models.Cart
+
+
+<div style="display:inline">
+    @Model.Lines.Sum(x => x.Quantity)
+</div>
